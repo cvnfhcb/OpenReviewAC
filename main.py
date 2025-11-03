@@ -8,14 +8,15 @@ Automates the Area Chair (AC) workflow for OpenReview conferences by:
 - Writing all data to a Google Sheet for easy tracking and management
 
 Usage:
-    1. Set up environment variables (see .env.example):
+    1. Set up environment variables in .env file:
        - OPENREVIEW_USERNAME: Your OpenReview email
        - OPENREVIEW_PASSWORD: Your OpenReview password
-    
-    2. Configure the settings below (CONFERENCE_NAME, GSHEET_JSON, etc.)
-    
+       - GSHEET_CREDENTIALS_PATH: Path to your Google Sheets service account JSON key
+
+    2. Configure settings in config.py (CONFERENCE_NAME, etc.)
+
     3. Run the script:
-       python main_ac_tasks.py
+       python main.py
 
 Supported Conferences:
     - ICLR2026
@@ -26,12 +27,15 @@ Supported Conferences:
 For detailed setup instructions, see README.md
 """
 import logging
-from dotenv import load_dotenv
 from utils.gsheet import GSheetWithHeader
 from utils.openreview import OpenReviewPapers
-
-# Load environment variables from .env file
-load_dotenv()
+from config import (
+    CONFERENCE_INFO,
+    GSHEET_CREDENTIALS_PATH,
+    GSHEET_TITLE,
+    GSHEET_SHEET,
+    INITIALIZE_SHEET
+)
 
 # Configure logging
 logging.basicConfig(
@@ -39,219 +43,6 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
-
-# ============================================================================
-# CONFIGURATION - Update these values for your use case
-# ============================================================================
-
-# Conference selection: Choose from "ICLR2026", "NeurIPS2025", "ICCV2025", "ICML2025"
-CONFERENCE_NAME = "ICLR2026"
-
-# Cache directory: Where to store cached OpenReview data
-CACHE_ROOT = f"data/{CONFERENCE_NAME}/"
-
-# Google Sheets service account key file
-# Get this from Google Cloud Console after setting up a service account
-# See README.md for detailed instructions
-GSHEET_JSON = "your-service-account-key.json"
-
-# Google Sheet configuration
-GSHEET_TITLE = f"{CONFERENCE_NAME} AC DB"  # Name of the Google Sheet
-GSHEET_SHEET = "Sheet1"                     # Name of the worksheet/tab
-
-# Initialize sheet: Set to True to clear existing data and start fresh
-# Set to False to update existing rows based on paper_number
-INITIALIZE_SHEET = False
-
-CONFERENCE_INFO = {
-    "ICML2025": dict(
-        CONFERENCE_ID = 'ICML.cc/2025/Conference',
-        RATING_EXTRACTOR = lambda review: review.content["overall_recommendation"]['value'],
-        PAPER_NUMBER_EXTRACTOR = lambda paper: paper.number,
-        NOTE_KEYS = {
-            'review': 'summary',
-            'comment': 'comment',
-            'acknowledgement': 'acknowledgement',
-            'rebuttal': 'rebuttal'
-        }
-    ),
-    "ICCV2025": dict(
-        CONFERENCE_ID = 'thecvf.com/ICCV/2025/Conference',
-        # RATING_EXTRACTOR = lambda review: int(
-        #     review.content["preliminary_recommendation"]['value'].split(":")[0]
-        # )
-        FINAL_RATING_EXTRACTOR = lambda review: (
-            int(review.content["final_recommendation"]['value'].split(":")[0])
-            if "final_recommendation" in review.content
-            and "value" in review.content["final_recommendation"]
-            else None
-        ),
-        PAPER_NUMBER_EXTRACTOR = lambda paper: paper.number,
-        NOTE_EXTRACTORS = {
-            'review': lambda note: 'preliminary_recommendation' in note.content,
-            'comment': lambda note: 'comment' in note.content,
-            'rebuttal': lambda note: ('pdf' in note.content and 'abstract' not in note.content),
-            'ac_letter': lambda note: (
-                'pdf' in note.content
-                and 'abstract' not in note.content
-                and 'value' in note.content['confidential_comments_to_AC']
-            ),
-        }
-    ),
-    "NeurIPS2025": dict(
-        CONFERENCE_ID = 'NeurIPS.cc/2025/Conference',
-        RATING_EXTRACTOR = lambda review: (
-            int(review.content["rating"]['value'])
-            if "rating" in review.content and "value" in review.content["rating"]
-            else None
-        ),
-        PAPER_NUMBER_EXTRACTOR = lambda paper: paper.number,
-        NOTE_EXTRACTORS = {
-            'review': lambda note: any(
-                invitation.endswith('Official_Review') for invitation in note.invitations
-            ),
-            'final_justification': lambda note: (
-                "final_justification" in note.content
-                and any(invitation.endswith('Official_Review') for invitation in note.invitations)
-            ),
-            'other_comment': lambda note: (
-                any(invitation.endswith('Official_Comment') for invitation in note.invitations)
-                and not (
-                    any(
-                        writer for writer in note.writers
-                        if writer.split('/')[-1].startswith('Reviewer')
-                    )
-                    and any(
-                        reader for reader in note.readers
-                        if reader.split('/')[-1].startswith('Author')
-                    )
-                )
-            ),
-            'discussion_comment': lambda note: (
-                any(
-                    invitation.endswith('Official_Comment')
-                    for invitation in note.invitations
-                )
-                and any(
-                    writer for writer in note.writers
-                    if writer.split('/')[-1].startswith('Reviewer')
-                )
-                and any(
-                    reader for reader in note.readers
-                    if reader.split('/')[-1].startswith('Author')
-                )
-            ),
-            'rebuttal': lambda note: any(
-                invitation.endswith('Rebuttal')
-                for invitation in note.invitations
-            ),
-            'rebuttal_acknowledgement': lambda note: (
-                any(
-                    invitation.endswith('Mandatory_Acknowledgement')
-                    for invitation in note.invitations
-                )
-            ),
-            'ac_letter_author': lambda note: (
-                any(
-                    invitation.endswith('Author_AC_Confidential_Comment')
-                    for invitation in note.invitations
-                )
-                and any(
-                    writer for writer in note.writers
-                    if writer.split('/')[-1].startswith('Author')
-                )
-            ),
-            'ac_letter_ac': lambda note: (
-                any(
-                    invitation.endswith('Author_AC_Confidential_Comment')
-                    for invitation in note.invitations
-                )
-                and any(
-                    writer for writer in note.writers
-                    if writer.split('/')[-1].startswith('Area_Chair')
-                )
-            ),
-        }
-    ),
-    "ICLR2026": dict(
-        CONFERENCE_ID = 'ICLR.cc/2026/Conference',
-        RATING_EXTRACTOR = lambda review: (
-            int(review.content["rating"]['value'])
-            if "rating" in review.content and "value" in review.content["rating"]
-            else None
-        ),
-        PAPER_NUMBER_EXTRACTOR = lambda paper: paper.number,
-        NOTE_EXTRACTORS = {
-            'review': lambda note: any(
-                invitation.endswith('Official_Review') for invitation in note.invitations
-            ),
-            'final_justification': lambda note: (
-                "final_justification" in note.content
-                and any(invitation.endswith('Official_Review') for invitation in note.invitations)
-            ),
-            'other_comment': lambda note: (
-                any(
-                    invitation.endswith('Official_Comment')
-                    for invitation in note.invitations
-                )
-                and not (
-                    any(
-                        writer for writer in note.writers
-                        if writer.split('/')[-1].startswith('Reviewer')
-                    )
-                    and any(
-                        reader for reader in note.readers
-                        if reader.split('/')[-1].startswith('Author')
-                    )
-                )
-            ),
-            'discussion_comment': lambda note: (
-                any(
-                    invitation.endswith('Official_Comment')
-                    for invitation in note.invitations
-                )
-                and any(
-                    writer for writer in note.writers
-                    if writer.split('/')[-1].startswith('Reviewer')
-                )
-                and any(
-                    reader for reader in note.readers
-                    if reader.split('/')[-1].startswith('Author')
-                )
-            ),
-            'rebuttal': lambda note: any(
-                invitation.endswith('Rebuttal')
-                for invitation in note.invitations
-            ),
-            'rebuttal_acknowledgement': lambda note: (
-                any(
-                    invitation.endswith('Mandatory_Acknowledgement')
-                    for invitation in note.invitations
-                )
-            ),
-            'ac_letter_author': lambda note: (
-                any(
-                    invitation.endswith('Author_AC_Confidential_Comment')
-                    for invitation in note.invitations
-                )
-                and any(
-                    writer for writer in note.writers
-                    if writer.split('/')[-1].startswith('Author')
-                )
-            ),
-            'ac_letter_ac': lambda note: (
-                any(
-                    invitation.endswith('Author_AC_Confidential_Comment')
-                    for invitation in note.invitations
-                )
-                and any(
-                    writer for writer in note.writers
-                    if writer.split('/')[-1].startswith('Area_Chair')
-                )
-            ),
-        }
-    )
-}[CONFERENCE_NAME]
 
 
 class OpenReviewACPapers(OpenReviewPapers):
@@ -263,12 +54,43 @@ class OpenReviewACPapers(OpenReviewPapers):
     """
     def get_ac_papers_list(self):
         """
-        Retrieves a list of papers assigned to the Area Chair for a given conference.
-        This includes:
-        - Retrieving the list of Area Chair members
-        - Checking if the current user is an Area Chair
-        - Fetching all submissions assigned to the Area Chair
-        - Extracting review scores and other relevant information
+        Retrieve and process all papers assigned to you as an Area Chair.
+
+        This method performs a comprehensive retrieval and analysis of all papers
+        assigned to the authenticated user in their Area Chair role for the
+        configured conference.
+
+        The method performs the following steps:
+        1. Verifies that you are an Area Chair for the conference
+        2. Identifies all papers assigned to you (using conference-specific logic)
+        3. For each assigned paper:
+           - Retrieves all reviews and extracts initial and final scores
+           - Counts different types of notes (rebuttals, comments, etc.)
+           - Checks withdrawal status
+           - Generates OpenReview URL
+
+        Returns:
+            List[dict]: List of dictionaries, one per assigned paper, containing:
+                - paper_title: Title of the submission
+                - paper_number: OpenReview paper number
+                - paper_url: Direct link to paper on OpenReview
+                - withdrawn: Boolean indicating if paper is withdrawn
+                - num_reviewers: Number of assigned reviewers
+                - avg_score: Average initial review score
+                - reviewerN_score: Individual reviewer initial scores (1-5)
+                - avg_final_score: Average final review score (if available)
+                - reviewerN_final_score: Individual reviewer final scores (1-5)
+                - *_count: Counts of various note types (reviews, rebuttals, comments, etc.)
+                - reviewer_participation: Number of participating reviewers
+
+        Raises:
+            Warning: If user is not an Area Chair for the configured conference
+
+        Note:
+            Different conferences use different assignment methods:
+            - ICLR: Uses specific AC assignment groups (Area_Chair_{code})
+            - NeurIPS/ICCV: Uses paper.readers to determine assignments
+            The method automatically detects and uses the appropriate method.
         """
         logging.info("Starting to retrieve AC papers list")
         ac_group_id = f'{self.conference_id}/Area_Chairs'
@@ -296,11 +118,11 @@ class OpenReviewACPapers(OpenReviewPapers):
         assigned_paper_numbers = set()
         specific_ac_groups = []
         pool_ac_groups = []
-        
+
         for ac_group in ac_groups:
             # Method 1: Look for specific assignments like "ICLR.cc/2026/Conference/Submission10059/Area_Chair_wGtT"
-            if (self.conference_id in ac_group and 
-                '/Submission' in ac_group and 
+            if (self.conference_id in ac_group and
+                '/Submission' in ac_group and
                 '/Area_Chair_' in ac_group):
                 specific_ac_groups.append(ac_group)
                 parts = ac_group.split('/Submission')
@@ -311,21 +133,21 @@ class OpenReviewACPapers(OpenReviewPapers):
                     except ValueError:
                         pass
             # Method 2: Collect pool groups for fallback (e.g., ".../Submission123/Area_Chairs")
-            elif (self.conference_id in ac_group and 
-                  '/Submission' in ac_group and 
+            elif (self.conference_id in ac_group and
+                  '/Submission' in ac_group and
                   ac_group.endswith('/Area_Chairs')):
                 pool_ac_groups.append(ac_group)
-        
+
         use_specific_assignment = len(specific_ac_groups) > 0
-        
+
         if use_specific_assignment:
-            logging.info("Found %d specific AC assignment groups (Area_Chair_XXX) for %s", 
+            logging.info("Found %d specific AC assignment groups (Area_Chair_XXX) for %s",
                          len(specific_ac_groups), self.conference_id)
             logging.info("Using specific AC assignment method")
         else:
             logging.info("No specific AC assignments found, will use paper.readers method (legacy)")
             logging.info("Found %d pool AC groups for %s", len(pool_ac_groups), self.conference_id)
-        
+
         if assigned_paper_numbers:
             logging.info("Pre-filtered %d assigned paper numbers", len(assigned_paper_numbers))
             logging.info("Assigned papers: %s", sorted(list(assigned_paper_numbers)))
@@ -345,7 +167,7 @@ class OpenReviewACPapers(OpenReviewPapers):
                     if paper_notes:
                         submissions.extend(paper_notes)
                         logging.debug("Retrieved paper %d", paper_num)
-                except Exception as e:
+                except (ValueError, KeyError, AttributeError) as e:
                     logging.warning("Failed to retrieve paper %d: %s", paper_num, e)
             logging.info("Retrieved %d assigned submissions", len(submissions))
         else:
@@ -354,7 +176,7 @@ class OpenReviewACPapers(OpenReviewPapers):
             all_submissions = []
             offset = 0
             batch_size = 1000
-            
+
             while True:
                 submissions_batch = self.openreview_client.get_notes(
                     invitation=f'{self.conference_id}/-/Submission',
@@ -367,11 +189,11 @@ class OpenReviewACPapers(OpenReviewPapers):
                 all_submissions.extend(submissions_batch)
                 logging.info("Retrieved %d submissions (total: %d)", len(submissions_batch), len(all_submissions))
                 offset += batch_size
-                
+
                 # Stop if we got less than a full batch (means we're at the end)
                 if len(submissions_batch) < batch_size:
                     break
-            
+
             submissions = all_submissions
             logging.info("Found %d total submissions", len(submissions))
 
@@ -379,13 +201,13 @@ class OpenReviewACPapers(OpenReviewPapers):
         logging.info("Processing papers assigned to AC")
         papers_checked = 0
         papers_matched = 0
-        
+
         for paper in submissions:
             papers_checked += 1
-            
+
             # Check assignment using the appropriate method
             is_assigned = False
-            
+
             if use_specific_assignment:
                 # Method 1: Check if paper number is in pre-filtered list (ICLR style)
                 is_assigned = paper.number in assigned_paper_numbers
@@ -396,11 +218,11 @@ class OpenReviewACPapers(OpenReviewPapers):
                     # Also check if you're actually in one of the AC groups for this paper
                     if any(ac_group in paper.readers for ac_group in pool_ac_groups):
                         is_assigned = True
-            
+
             if not is_assigned:
                 logging.debug("Paper %d is not assigned to you as AC.", paper.number)
                 continue
-            
+
             papers_matched += 1
             logging.info("Processing assigned paper %d", paper.number)
 
@@ -486,7 +308,7 @@ def main():
     )
     ac_papers_list = openreview_papers.get_ac_papers_list()
 
-    gsheet_write = GSheetWithHeader(key_file=GSHEET_JSON,
+    gsheet_write = GSheetWithHeader(key_file=GSHEET_CREDENTIALS_PATH,
                                     doc_name=GSHEET_TITLE,
                                     sheet_name=GSHEET_SHEET)
     gsheet_write.write_rows(rows=ac_papers_list,

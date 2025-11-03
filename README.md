@@ -1,5 +1,9 @@
 # OpenReview AC Workflow Automation
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Code style: PEP 8](https://img.shields.io/badge/code%20style-PEP%208-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
+
 Automate your Area Chair (AC) workflow for OpenReview conferences. This tool retrieves all papers assigned to you as an AC, extracts review scores and discussion activity, and organizes everything in a Google Sheet for easy tracking and management.
 
 ## Features
@@ -31,7 +35,7 @@ Additional conferences can be easily added by extending the `CONFERENCE_INFO` di
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/OpenReviewAC.git
+   git clone https://github.com/coallaoh/OpenReviewAC.git
    cd OpenReviewAC
    ```
 
@@ -48,7 +52,7 @@ Additional conferences can be easily added by extending the `CONFERENCE_INFO` di
 
 ## Setup
 
-### 1. OpenReview Credentials
+### 1. Environment Variables
 
 Create a `.env` file in the project root (use `.env.example` as a template):
 
@@ -56,15 +60,16 @@ Create a `.env` file in the project root (use `.env.example` as a template):
 cp .env.example .env
 ```
 
-Edit `.env` and add your OpenReview credentials:
+Edit `.env` and add your credentials:
 
 ```
 OPENREVIEW_USERNAME=your_email@example.com
 OPENREVIEW_PASSWORD=your_password
+GSHEET_CREDENTIALS_PATH=your-service-account-key.json
 ```
 
-**Note**: 
-- The script automatically loads credentials from the `.env` file using `python-dotenv`
+**Note**:
+- The script automatically loads these values from the `.env` file using `python-dotenv`
 - Keep your `.env` file secure and never commit it to version control
 - The `.env` file is already in `.gitignore` to prevent accidental commits
 
@@ -93,7 +98,7 @@ To write data to Google Sheets, you need a service account:
 4. **Save the credentials**:
    - Move the downloaded JSON file to the project directory
    - Rename it to something memorable (e.g., `gsheet-credentials.json`)
-   - Update `GSHEET_JSON` in `main_ac_tasks.py` to match the filename
+   - Add the filename to your `.env` file as `GSHEET_CREDENTIALS_PATH`
 
 5. **Share your Google Sheet**:
    - Open the JSON credentials file
@@ -103,14 +108,11 @@ To write data to Google Sheets, you need a service account:
 
 ### 3. Configuration
 
-Edit `main_ac_tasks.py` and update the configuration constants:
+Edit `config.py` to customize your settings:
 
 ```python
 # Choose your conference
 CONFERENCE_NAME = "ICLR2026"  # Options: "ICLR2026", "NeurIPS2025", "ICCV2025", "ICML2025"
-
-# Path to your Google Sheets service account key file
-GSHEET_JSON = "gsheet-credentials.json"
 
 # Name of your Google Sheet
 GSHEET_TITLE = f"{CONFERENCE_NAME} AC DB"
@@ -122,14 +124,14 @@ GSHEET_SHEET = "Sheet1"
 INITIALIZE_SHEET = False
 ```
 
-See `config_example.py` for more details.
+**Important**: The `GSHEET_CREDENTIALS_PATH` is now configured in your `.env` file (see step 1).
 
 ## Usage
 
 Once configured, simply run:
 
 ```bash
-python main_ac_tasks.py
+python main.py
 ```
 
 The script will:
@@ -162,23 +164,23 @@ The Google Sheet will contain the following columns for each paper:
 
 To add support for a new conference:
 
-1. Add an entry to the `CONFERENCE_INFO` dictionary in `main_ac_tasks.py`:
+1. Add an entry to the `CONFERENCE_INFO` dictionary in `config.py`:
 
 ```python
 "YourConf2026": dict(
     # Required: Conference ID from OpenReview
     CONFERENCE_ID = 'yourconf.org/2026/Conference',
-    
+
     # Required: Function to extract paper number
     PAPER_NUMBER_EXTRACTOR = lambda paper: paper.number,
-    
+
     # Optional: Function to extract rating from review
     RATING_EXTRACTOR = lambda review: (
         int(review.content["rating"]['value'])
         if "rating" in review.content and "value" in review.content["rating"]
         else None
     ),
-    
+
     # Required: Dictionary of note type extractors
     NOTE_EXTRACTORS = {
         'review': lambda note: any(
@@ -219,7 +221,13 @@ To add support for a new conference:
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+Contributions are welcome! We especially appreciate:
+- Support for new conferences
+- Bug fixes and improvements
+- Documentation enhancements
+- Feature requests and ideas
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
@@ -230,7 +238,28 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built using the [OpenReview Python API](https://github.com/openreview/openreview-py)
 - Google Sheets integration via [gsheet-manager](https://pypi.org/project/gsheet-manager/)
 
+## Support
+
+If you find this tool helpful, please consider:
+- ⭐ Starring the repository
+- 🐛 Reporting bugs via GitHub issues
+- 💡 Suggesting new features
+- 🤝 Contributing code or documentation
+
+## Citation
+
+If you use this tool in your research or workflow, please cite:
+
+```bibtex
+@software{openreview_ac_workflow,
+  author = {Oh, Seong Joon},
+  title = {OpenReview AC Workflow Automation},
+  year = {2025},
+  url = {https://github.com/coallaoh/OpenReviewAC}
+}
+```
+
 ## Contact
 
-For questions or issues, please open an issue on GitHub.
+For questions or issues, please open an issue on [GitHub](https://github.com/coallaoh/OpenReviewAC/issues).
 
