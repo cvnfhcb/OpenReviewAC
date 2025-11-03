@@ -26,8 +26,12 @@ Supported Conferences:
 For detailed setup instructions, see README.md
 """
 import logging
+from dotenv import load_dotenv
 from utils.gsheet import GSheetWithHeader
 from utils.openreview import OpenReviewPapers
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(

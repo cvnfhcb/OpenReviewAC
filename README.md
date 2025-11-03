@@ -63,7 +63,10 @@ OPENREVIEW_USERNAME=your_email@example.com
 OPENREVIEW_PASSWORD=your_password
 ```
 
-**Note**: Keep your `.env` file secure and never commit it to version control.
+**Note**: 
+- The script automatically loads credentials from the `.env` file using `python-dotenv`
+- Keep your `.env` file secure and never commit it to version control
+- The `.env` file is already in `.gitignore` to prevent accidental commits
 
 ### 2. Google Sheets API Setup
 
